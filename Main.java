@@ -53,6 +53,8 @@ public class Main {
         // -1 signifies RUNS_DN
         findRuns(list, -1);
 
+        ArrayList<Integer> listRunsCount = mergeLists(listRunsUpCount, listRunsDnCount);
+
     } // end run()
 
 
@@ -69,18 +71,37 @@ public class Main {
             }
             else {
                 if (k != 0){
-
+                    // Increment the element at index k of listRunsCount
+                    listRunsCount.set(k, listRunsCount.get(k) + 1);
+                    k = 0;
                 }
             }
 
             i++;
+        } // end while
+
+        if (k != 0){
+            // Increment the element at index k of listRunsCount
+            listRunsCount.set(k, listRunsCount.get(k) + 1);
         }
+
+        return listRunsCount;
     } // end findRuns()
+
+    public ArrayList<Integer> mergeLists(ArrayList<Integer> pListRunsUpCount, ArrayList<Integer> pListRunsDnCount){
+        ArrayList<Integer> listRunsCount = arrayListCreate(pListRunsUpCount.size(), 0);
+        for (int i = 0; i < pListRunsUpCount.size() - 1; i ++){
+            // Set element i of listRunsCount to the sum of the elements at i in pListRunsUpCount and pListRunsDnCount
+            listRunsCount.set(i, pListRunsUpCount.get(i) + pListRunsDnCount.get(i));
+        }
+
+        return listRunsCount;
+    }
 
 
     public ArrayList<Integer> arrayListCreate(int pSize, int pInitValue){
         ArrayList<Integer> list = new ArrayList<>();
-        for(int i = 0;  i < pSize; i++){
+        for (int i = 0;  i < pSize; i++){
             list.add(pInitValue);
         }
         return list;
