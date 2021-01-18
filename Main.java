@@ -35,26 +35,32 @@ public class Main {
 //        String fileName = input.next();
 
         // Hardcoded file name for testing
-        String fileName = "p1-in.txt";
+        String inFileName = "p1-in.txt";
 
         // Try catch block for reading file
         try {
-            list = readInputFile(fileName);
+            list = readInputFile(inFileName);
         }
         catch (FileNotFoundException pException){
-            System.out.printf("Oops, could not open '%s' for reading. The program is ending.", fileName);
+            System.out.printf("Oops, could not open '%s' for reading. The program is ending.", inFileName);
             System.exit(-100);
         }
 
-        ArrayList<Integer> listRunsUpCount = new ArrayList<>();
-        ArrayList<Integer> listRunsDnCount = new ArrayList<>();
-
         // 1 signifies RUNS_UP
-        findRuns(list, 1);
+        ArrayList<Integer> listRunsUpCount = findRuns(list, 1);
         // -1 signifies RUNS_DN
-        findRuns(list, -1);
+        ArrayList<Integer> listRunsDnCount = findRuns(list, -1);
 
         ArrayList<Integer> listRunsCount = mergeLists(listRunsUpCount, listRunsDnCount);
+
+        String outFileName = "p1-runs.txt";
+        try {
+            writeOutputFile(outFileName, listRunsCount);
+        }
+        catch (FileNotFoundException pException){
+            System.out.printf("Oops, could not open '%s' for writing. The program is ending.", outFileName);
+            System.exit(-200);
+        }
 
     } // end run()
 
@@ -63,11 +69,11 @@ public class Main {
         ArrayList<Integer> listRunsCount  = arrayListCreate(pList.size(), 0);
         int i = 0, k = 0;
 
-        while(i < pList.size()){
+        while(i < pList.size() - 1){
             if (pDir == 1 && pList.get(i) <= pList.get(i + 1)){
                 k++;
             }
-            else if (pDir == -1 && pList.get(i) >= pList.get(i)){
+            else if (pDir == -1 && pList.get(i) >= pList.get(i + 1)){
                 k++;
             }
             else {
@@ -111,10 +117,18 @@ public class Main {
 
     public void writeOutputFile(String pFileName, ArrayList<Integer> pListRuns) throws FileNotFoundException {
         PrintWriter out = new PrintWriter(pFileName);
-        out.printf("runs_total: %d\n", 99999);
-        for (int k = 1; k < pListRuns.size() - 1; k++){
-            out.printf("runs_%d: %d", k, pListRuns.get(k));
+        int runsTotal = 0;
+        for (Integer pListRun : pListRuns){
+            runsTotal += pListRun;
         }
+
+        out.printf("runs_total: %d\n", runsTotal);
+
+        for (int k = 1; k < pListRuns.size(); k++){
+            out.printf("runs_%d: %d\n", k, pListRuns.get(k));
+        }
+
+        out.close();
     }
 
     // Read the file that is passed and add integers to the ArrayList list
