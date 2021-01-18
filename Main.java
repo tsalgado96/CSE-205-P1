@@ -15,6 +15,7 @@
  ********************************************************************************************************/
 import java.util.Scanner;
 import java.io.File;
+import java.io.PrintWriter;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.lang.Integer;
@@ -107,15 +108,25 @@ public class Main {
         return list;
     } // end arrayListCreate()
 
+
+    public void writeOutputFile(String pFileName, ArrayList<Integer> pListRuns) throws FileNotFoundException {
+        PrintWriter out = new PrintWriter(pFileName);
+        out.printf("runs_total: %d\n", 99999);
+        for (int k = 1; k < pListRuns.size() - 1; k++){
+            out.printf("runs_%d: %d", k, pListRuns.get(k));
+        }
+    }
+
     // Read the file that is passed and add integers to the ArrayList list
-    public ArrayList<Integer> readInputFile(String pFileName) throws FileNotFoundException{
-        Scanner scanner = new Scanner(new File(pFileName));
+    public ArrayList<Integer> readInputFile(String pFileName) throws FileNotFoundException {
+        Scanner in = new Scanner(new File(pFileName));
         ArrayList<Integer> list = new ArrayList<>();
 
-        while(scanner.hasNextInt()){
-            int num = scanner.nextInt();
+        while(in.hasNextInt()){
+            int num = in.nextInt();
             list.add(num);
         }
+        in.close();
         return list;
     } // end readInputFile
 } // end Main
