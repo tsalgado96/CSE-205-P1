@@ -2,7 +2,7 @@
  * CLASS: Main (Main.java)
  *
  * DESCRIPTION
- * A description of the contents of this file.
+ * Program determines how many runs up and runs down are in a given data set.
  *
  * COURSE AND PROJECT INFORMATION
  * CSE205 Object Oriented Programming and Data Structures, Spring 2021
@@ -29,12 +29,7 @@ public class Main {
         // ArrayList for contents of the file
         ArrayList<Integer> list = new ArrayList<>();
 
-        // User inputs the name of the file
-//        Scanner input = new Scanner((System.in));
-//        System.out.print("Please enter file name: ");
-//        String fileName = input.next();
-
-        // Hardcoded file name for testing
+        // Variable for input file name
         String inFileName = "p1-in.txt";
 
         // Try catch block for reading file
@@ -42,7 +37,7 @@ public class Main {
             list = readInputFile(inFileName);
         }
         catch (FileNotFoundException pException){
-            System.out.printf("Oops, could not open '%s' for reading. The program is ending.", inFileName);
+            System.out.printf("Oops, could not open '%s' for reading. The program is ending.\n", inFileName);
             System.exit(-100);
         }
 
@@ -51,28 +46,35 @@ public class Main {
         // -1 signifies RUNS_DN
         ArrayList<Integer> listRunsDnCount = findRuns(list, -1);
 
+        // Stores the total runs at each index in the ArrayList listRunsCount
         ArrayList<Integer> listRunsCount = mergeLists(listRunsUpCount, listRunsDnCount);
+
 
         String outFileName = "p1-runs.txt";
         try {
             writeOutputFile(outFileName, listRunsCount);
         }
         catch (FileNotFoundException pException){
-            System.out.printf("Oops, could not open '%s' for writing. The program is ending.", outFileName);
+            System.out.printf("Oops, could not open '%s' for writing. The program is ending.\n", outFileName);
             System.exit(-200);
         }
 
     } // end run()
 
 
+    /**
+     * The findRuns method iterates through the ArrayList data set and counts how many runs there are
+     * */
     public ArrayList<Integer> findRuns(ArrayList<Integer> pList, int pDir){
         ArrayList<Integer> listRunsCount  = arrayListCreate(pList.size(), 0);
         int i = 0, k = 0;
 
         while(i < pList.size() - 1){
+            // Increment k if pDir is RUNS_UP
             if (pDir == 1 && pList.get(i) <= pList.get(i + 1)){
                 k++;
             }
+            // Increment k if pDir is RUNS_DN
             else if (pDir == -1 && pList.get(i) >= pList.get(i + 1)){
                 k++;
             }
@@ -95,6 +97,9 @@ public class Main {
         return listRunsCount;
     } // end findRuns()
 
+    /**
+     * The mergeLists method combines the amount of runs up and runs down into one cumulative total at each index
+     * */
     public ArrayList<Integer> mergeLists(ArrayList<Integer> pListRunsUpCount, ArrayList<Integer> pListRunsDnCount){
         ArrayList<Integer> listRunsCount = arrayListCreate(pListRunsUpCount.size(), 0);
         for (int i = 0; i < pListRunsUpCount.size() - 1; i ++){
@@ -103,11 +108,14 @@ public class Main {
         }
 
         return listRunsCount;
-    }
+    } // end mergeLists
 
-
+    /**
+     * The arrayListCreate method creates an ArrayList of size pSize and initializes all elements with pInitValue
+     * */
     public ArrayList<Integer> arrayListCreate(int pSize, int pInitValue){
         ArrayList<Integer> list = new ArrayList<>();
+        // Initialize all elements in the ArrayList to pInitValue
         for (int i = 0;  i < pSize; i++){
             list.add(pInitValue);
         }
@@ -115,27 +123,34 @@ public class Main {
     } // end arrayListCreate()
 
 
+    /**
+     * The writeOutputFile method writes the amount total amount of runs at each index into the specified file
+     * */
     public void writeOutputFile(String pFileName, ArrayList<Integer> pListRuns) throws FileNotFoundException {
         PrintWriter out = new PrintWriter(pFileName);
+        // Determine the amount of TOTAL runs
         int runsTotal = 0;
         for (Integer pListRun : pListRuns){
             runsTotal += pListRun;
         }
-
         out.printf("runs_total: %d\n", runsTotal);
 
+        // Print the amount of runs at each index
         for (int k = 1; k < pListRuns.size(); k++){
             out.printf("runs_%d: %d\n", k, pListRuns.get(k));
         }
 
         out.close();
-    }
+    } // end writeOutputFile
 
-    // Read the file that is passed and add integers to the ArrayList list
+    /**
+     * The readInputFile method reads the file that is passed and adds the integers in the file to the ArrayList list
+     * */
     public ArrayList<Integer> readInputFile(String pFileName) throws FileNotFoundException {
         Scanner in = new Scanner(new File(pFileName));
         ArrayList<Integer> list = new ArrayList<>();
 
+        // Add integers in the file to the ArrayList
         while(in.hasNextInt()){
             int num = in.nextInt();
             list.add(num);
